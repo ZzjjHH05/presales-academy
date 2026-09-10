@@ -1,9 +1,16 @@
-# 售前学院 · 生产部署
-# 用法: docker compose up -d --build
-# 首次部署前: 把 Caddyfile 里的 your-domain.com 换成你的真实域名
+# 售前学院 · 生产部署（方案 B：香港服务器 Docker，当前主路线）
+# 用法：先配好 .env（cp .env.example .env，填 NEXT_PUBLIC_SITE_URL，AI Key 到 Phase 4 再填），
+#       确认 Caddyfile 域名已替换，然后 docker compose up -d --build
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        # 构建期注入：sitemap / OG 卡片是 build 时静态生成的，需要正式域名
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+    env_file:
+      - path: .env
+        required: false # 缺失也能起（本地 file 数据库模式），但建议配置；AI Key（Phase 4 起）从这里进容器
     restart: unless-stopped
     expose:
       - "3000"

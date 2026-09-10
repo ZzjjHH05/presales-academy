@@ -1,7 +1,8 @@
 # 售前学院 · 部署手册
 
-当前默认上线走「方案 A：Vercel + Turso」（免费、零运维，适合个人项目与秋招展示）。
-买服务器后再切「方案 B：香港服务器 Docker」也行，两套物料都在仓库里。
+**当前主路线：「方案 B：香港服务器 Docker」（已购腾讯云香港轻量服务器）。**
+「方案 A：Vercel + Turso」全套保留为备用路径（代码零改动即切回，见下）。
+两套物料都在仓库里，互不干扰。
 
 ---
 
@@ -143,14 +144,22 @@ cd presales-academy
 2. 等 DNS 生效（几分钟到 1 小时；可用 `ping 你的域名` 或 [dnschecker.org](https://dnschecker.org) 看是否指向你的 IP）。
 3. 修改 `Caddyfile`：把 `your-domain.com` 换成你的真实域名。
 
-## 4. 启动（一行命令）
+## 4. 启动
 
 ```bash
 cd presales-academy
+
+# 先配环境变量（构建 sitemap/OG 要用正式域名；AI Key 到 Phase 4 再回来填）
+cp .env.example .env
+nano .env        # 把 NEXT_PUBLIC_SITE_URL=https://你的域名 填好，保存退出
+
+# 确认 Caddyfile 里的域名已替换为真实域名（见上一步）
 docker compose up -d --build
 docker compose ps          # 两个容器都 Up 即成功
 docker compose logs -f app # 看应用日志（首次会打印 Next.js ready）
 ```
+
+> `.env` 会被 compose 自动注入容器（env_file），且已被 .gitignore/.dockerignore 双重排除——密钥不进 git、不进镜像。
 
 > HTTPS 证书是 Caddy **自动签发**的：第一次访问 https://你的域名 时它会自动申请 Let's Encrypt 证书，稍等 30 秒即可，无需手动配置。
 

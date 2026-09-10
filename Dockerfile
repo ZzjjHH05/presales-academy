@@ -10,6 +10,9 @@ RUN pnpm install --frozen-lockfile
 FROM node:24-alpine AS build
 RUN npm install -g pnpm@11.25.0
 ENV NEXT_TELEMETRY_DISABLED=1
+# 构建期注入站点域名（sitemap/OG 静态生成需要），由 docker-compose build args 传入
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

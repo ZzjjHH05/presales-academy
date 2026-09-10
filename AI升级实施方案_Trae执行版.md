@@ -40,7 +40,7 @@
 |---|---|---|
 | D1 | 项目双重定位（工具 + 作品） | 后端与上线的存在理由：不是资料库需要，是简历作品需要 |
 | D2 | 后端最小化：三张表 + 自研 scrypt/httpOnly 认证 | 展示原理理解、零重依赖；迁移已验证只改一个文件（node:sqlite → libsql） |
-| D3 | Vercel + Turso 先行，服务器为保留的一等升级路径 | ¥0 跑通全流程、git push 即部署；db 层用 @libsql/client 后**天然兼容两种部署**（file: 模式在服务器直接可用），方案 B 随时可切、≤1 小时完成 |
+| D3 | 部署路线：香港服务器 Docker 为主，Vercel + Turso 全套保留为备用 | db 层 @libsql/client 天然双模式（file: / Turso），两套物料互切零代码；香港免备案、大陆访问 ~50ms；先买服务器省去二次迁移 |
 | D4 | 公司库数据分层 | 稳定层人工精编是护城河；波动层只存官方链接 + 时间戳，永远指向权威源 |
 | D5 | AI = 统一网关 + 结构化输出 + 降级 + eval | 含金量来自工程工序，不是"接了 API" |
 | D6 | AI 建议必须接地站内笔记 | 19+ 篇带来源笔记是独有语料；建议可验证、闭环到站内学习 |
@@ -86,18 +86,21 @@
 
 ---
 
-## Phase 1 · Vercel + Turso 上线 ▶️（提示词就绪：《Trae提示词_Phase1_Vercel版.md》）
+## Phase 1 · 上线 ▶️（代码已完成并验收；路线二次修订：香港服务器 Docker 为主）
 
 **目标**：拿到线上 URL；db 层迁移为 @libsql/client（本地 file: 零配置不变，生产连 Turso）。
 
+> **路线二次修订（2026-09）**：Phase 1 代码工作（libsql 迁移 + SEO + Vercel 适配）已完成并通过验收，两条路线通用。随后购入**腾讯云香港轻量服务器**，**直接启用方案 B（Docker）上线**；Vercel + Turso 全套保留为备用路径（不配 TURSO_* 环境变量即本地 file 模式 + volume 持久化，互切零代码）。已补齐服务器路线缺口：compose `env_file` 注入 `.env`、构建期 `NEXT_PUBLIC_SITE_URL` 传参（sitemap/OG 是 build 时静态生成的）、`.dockerignore` 排除密钥。上线步骤照 `deploy/README.md` 方案 B。
+
 要点（详见提示词）：迁移 `lib/db.ts`（导出 async 的 run/get/all 封装）→ `lib/auth.ts`、`app/api/sync/route.ts` 调用点加 async/await（不改逻辑）→ `next.config.mjs` 的 `outputFileTracingIncludes` 收进 `content/` → SEO（metadata / sitemap.ts / robots.ts / icon.svg）→ 文档同步（deploy/README.md 增方案 A 节）。
 
-**手动操作**（Trae 会给照抄清单）：Turso CLI 建库拿 URL + token → Vercel Import 仓库、填 `NEXT_PUBLIC_SITE_URL / TURSO_DATABASE_URL / TURSO_AUTH_TOKEN` → Deploy → **尽快绑 Cloudflare 域名**（`*.vercel.app` 在大陆基本不通，不绑域名你自己都打不开）。
+**手动操作**（服务器路线）：买香港轻量 + 域名 → SSH 装 Docker → git clone → `cp .env.example .env` 填 `NEXT_PUBLIC_SITE_URL` → Caddyfile 换域名 → `docker compose up -d --build` → 验收。
 
 **验收**：
-- [ ] 线上首页正常；注册 → 打卡 → 换浏览器/手机登录，进度仍在（Turso 持久化生效）
-- [ ] `git push` 后 Vercel 自动部署成功（此后每 Phase 推送即上线）
-- [ ] 自定义域名可访问，部署日志无错
+- [x] 本地全链路（注册→登录→sync 读写）+ build + sitemap/robots 已验收通过
+- [ ] 线上首页正常；注册 → 打卡 → 换浏览器/手机登录，进度仍在（volume 持久化生效）
+- [ ] `https://域名` 大陆直连可访问，Caddy 自动签发 HTTPS 证书
+- [ ] `docker compose logs app` 无报错
 
 ---
 
