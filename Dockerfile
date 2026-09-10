@@ -1,5 +1,6 @@
 # 售前学院 · 生产镜像（多阶段构建）
-# 依赖: node:sqlite 需要 Node >= 23.4（免 flag），这里用 Node 24 LTS
+# 依赖: @libsql/client（本地 file 模式仍写入 data/app.db，volume 持久化见 compose）
+# Node 24 LTS 同时满足 next 15 与 libsql 的运行要求
 FROM node:24-alpine AS deps
 RUN npm install -g pnpm@11.25.0
 WORKDIR /app
