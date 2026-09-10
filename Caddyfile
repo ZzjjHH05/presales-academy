@@ -1,4 +1,11 @@
-# 把 your-domain.com 换成你的真实域名（记得先做 DNS A 记录指向服务器 IP）
-your-domain.com {
+# 售前学院 · Caddy 反向代理配置
+# 域名 zzjjhh05.com 已于 2026-09 购买（腾讯云 DNSPod）
+# 前置：DNSPod 解析中加两条 A 记录（@ 和 www → 服务器公网 IP）
+# HTTPS：Caddy 自动申请并续期 Let's Encrypt 证书，无需手动配置
+zzjjhh05.com {
 	reverse_proxy app:3000
+}
+
+www.zzjjhh05.com {
+	redir https://zzjjhh05.com{uri} permanent
 }
