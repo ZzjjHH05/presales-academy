@@ -257,7 +257,7 @@
      ② Vercel Hobby 免费额度吃紧（带宽 100GB/月）；
      ③ 面试叙事需要更完整的部署故事（Docker/Caddy/免备案选型）。
    - **切换 runbook（≤1 小时，db 层零代码改动）**：
-     ① 买香港轻量服务器（Ubuntu 22.04，采购清单见 deploy/README.md 方案 B 节）；
+     ① 买香港轻量服务器（Ubuntu 26.04 LTS，22.04/24.04 亦可；采购清单见 deploy/README.md 方案 B 节）；
      ② 服务器装 Docker → git clone 本仓库 → `cp .env.example .env` 填全部变量；
      ③ **数据库三选一**（@libsql/client 天然支持，都不改代码）：
         a. 服务器本机 SQLite：不填 TURSO_*，`./data` 由 docker volume 持久化（零外部依赖，注意定期备份）；
