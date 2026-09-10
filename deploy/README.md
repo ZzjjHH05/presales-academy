@@ -16,24 +16,22 @@
 - 一个 Turso 账号（可用 GitHub 登录）：https://turso.tech
 
 ### A1. Turso：创建数据库并拿到凭据
-在本机终端执行（macOS/Linux/Windows PowerShell 均可）：
+
+**方式一（推荐，零安装）：网页控制台**
+1. 开代理打开 https://app.turso.tech/signup → 用 GitHub 登录（首次会让你创建组织，名字随意）
+2. Databases → **Create database** → 名字填 `presales` → Group/位置用默认（或选新加坡）→ 创建
+3. 点进数据库详情页 → 复制连接 URL（形如 `libsql://presales-<你的组织>.turso.io`）
+4. 在库详情页或其 Settings/Token 入口点 **Create token** → 复制长令牌（只显示一次，存好）
+
+**方式二（备选，官方 CLI；Windows 需先装 WSL）：**
 ```bash
-# 安装 Turso CLI（官方一行命令）
-# macOS/Linux:
+# Windows：管理员 PowerShell 执行 wsl --install 并重启进入 WSL 后：
+wsl
+# macOS/Linux/WSL 通用（注意：旧的 install.ps1 已下线 404，勿再用）：
 curl -sSfL https://get.tur.so/install.sh | bash
-# Windows PowerShell:
-irm https://get.tur.so/install.ps1 | iex
-
-# 登录（会打开浏览器授权）
 turso auth login
-
-# 创建数据库（名字自取，例如 presales）
 turso db create presales
-
-# 拿数据库 URL（形如 libsql://presales-<你的用户名>.turso.so）
 turso db show presales --url
-
-# 创建访问 token（一长串字符串，只显示一次，复制好）
 turso db tokens create presales
 ```
 记下两个值：`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`。
