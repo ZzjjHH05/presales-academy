@@ -126,6 +126,13 @@
     "article": "tech-checklist"
   },
   {
+    "id": "tech-4",
+    "domain": "tech",
+    "title": "全栈上线实录",
+    "blurb": "域名/服务器/Docker/HTTPS 链路与排障",
+    "article": "deploy-fullstack-notes"
+  },
+  {
     "id": "solutions-3",
     "domain": "solutions",
     "title": "产出物工具箱",
