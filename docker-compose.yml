@@ -1,0 +1,28 @@
+# 售前学院 · 生产部署
+# 用法: docker compose up -d --build
+# 首次部署前: 把 Caddyfile 里的 your-domain.com 换成你的真实域名
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    expose:
+      - "3000"
+    volumes:
+      - ./data:/app/data   # SQLite 持久化（换浏览器登录进度仍在）
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"      # HTTP（自动跳转 HTTPS）
+      - "443:443"    # HTTPS（Caddy 自动签发 Let's Encrypt 证书）
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config:

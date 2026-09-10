@@ -1,0 +1,135 @@
+[
+  {
+    "id": "industry-1",
+    "domain": "industry",
+    "title": "岗位全景与销售流程",
+    "blurb": "售前在销售流程的哪个环节、交付什么",
+    "article": "presales-overview"
+  },
+  {
+    "id": "industry-2",
+    "domain": "industry",
+    "title": "行业分析方法",
+    "blurb": "甲方视角、决策链、行业场景拆解",
+    "article": "industry-analysis"
+  },
+  {
+    "id": "tech-1",
+    "domain": "tech",
+    "title": "技术广度地图",
+    "blurb": "网络 / 云 / 数据中心一张图",
+    "article": "tech-breadth-map"
+  },
+  {
+    "id": "tech-2",
+    "domain": "tech",
+    "title": "云与虚拟化",
+    "blurb": "IaaS / PaaS 常用词与客户对话",
+    "article": "cloud-and-virtualization"
+  },
+  {
+    "id": "core-1",
+    "domain": "core",
+    "title": "售前五步法",
+    "blurb": "从需求挖掘到方案设计",
+    "article": "solution-five-steps"
+  },
+  {
+    "id": "core-2",
+    "domain": "core",
+    "title": "标书与讲标",
+    "blurb": "读懂招标文件，讲好方案",
+    "article": "tender-and-presentation"
+  },
+  {
+    "id": "solutions-1",
+    "domain": "solutions",
+    "title": "案例拆解模板",
+    "blurb": "行业-痛点-方案-价值四要素",
+    "article": "case-teardown-template"
+  },
+  {
+    "id": "solutions-2",
+    "domain": "solutions",
+    "title": "白皮书方案库",
+    "blurb": "从官方资料攒自己的弹药库",
+    "article": "white-paper-library"
+  },
+  {
+    "id": "soft-1",
+    "domain": "soft",
+    "title": "把技术讲成人话",
+    "blurb": "沟通与讲标表达基本功",
+    "article": "communicate-as-presales"
+  },
+  {
+    "id": "soft-2",
+    "domain": "soft",
+    "title": "商务与报价基础",
+    "blurb": "成本、折扣与回款的基本盘",
+    "article": "business-and-pricing"
+  },
+  {
+    "id": "job-1",
+    "domain": "job",
+    "title": "秋招时间线与策略",
+    "blurb": "时间线、投递策略、能力雷达",
+    "article": "recruitment-timeline"
+  },
+  {
+    "id": "job-2",
+    "domain": "job",
+    "title": "售前面经题型",
+    "blurb": "行为面 / 方案面 / 开放题拆解",
+    "article": "interview-question-types"
+  },
+  {
+    "id": "job-3",
+    "domain": "job",
+    "title": "简历与自我介绍",
+    "blurb": "把经历翻译成售前语言，1 分钟自我介绍",
+    "article": "resume-and-intro"
+  },
+  {
+    "id": "job-4",
+    "domain": "job",
+    "title": "群面与无领导",
+    "blurb": "角色分工、框架先行、推进讨论",
+    "article": "group-interview"
+  },
+  {
+    "id": "core-3",
+    "domain": "core",
+    "title": "客户拜访与需求调研 SOP",
+    "blurb": "拜访前中后四步闭环、需求调研方法",
+    "article": "client-visit-sop"
+  },
+  {
+    "id": "core-4",
+    "domain": "core",
+    "title": "竞品分析与差异化",
+    "blurb": "五维框架、找差异、做防御性方案",
+    "article": "competitive-analysis"
+  },
+  {
+    "id": "industry-3",
+    "domain": "industry",
+    "title": "常见行业速览",
+    "blurb": "政企 / 金融 / 制造 / 医疗 / 教育",
+    "article": "industry-overview"
+  },
+  {
+    "id": "tech-3",
+    "domain": "tech",
+    "title": "必懂技术清单",
+    "blurb": "网络 / 云 / 数据库 / 安全等自测",
+    "article": "tech-checklist"
+  },
+  {
+    "id": "solutions-3",
+    "domain": "solutions",
+    "title": "产出物工具箱",
+    "blurb": "方案书 / PPT / 报价怎么写",
+    "article": "output-toolbox"
+  }
+]

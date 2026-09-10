@@ -1,0 +1,4 @@
+# 把 your-domain.com 换成你的真实域名（记得先做 DNS A 记录指向服务器 IP）
+your-domain.com {
+	reverse_proxy app:3000
+}
