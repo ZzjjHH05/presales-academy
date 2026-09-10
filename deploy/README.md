@@ -1,4 +1,82 @@
-# 售前学院 · 部署手册（第一次上线版）
+# 售前学院 · 部署手册
+
+当前默认上线走「方案 A：Vercel + Turso」（免费、零运维，适合个人项目与秋招展示）。
+买服务器后再切「方案 B：香港服务器 Docker」也行，两套物料都在仓库里。
+
+---
+
+## 方案 A：Vercel + Turso（当前路线）
+
+> 目标：把仓库接到 Vercel（免费 Hobby 档）+ Turso 托管数据库，零成本上线 `https://xxx.vercel.app`，后期可接自定义域名。
+> Vercel serverless 没有持久文件系统，所以生产数据库用 Turso（libSQL 托管，免费档对个人项目够用）；本地开发仍用 `data/app.db` 零配置。
+
+### A0. 前置准备（账号）
+- 一个 GitHub 账号，且本仓库已推上去（`git remote -v` 能看到 origin）。
+- 一个 Vercel 账号（用 GitHub 登录最快）：https://vercel.com
+- 一个 Turso 账号（可用 GitHub 登录）：https://turso.tech
+
+### A1. Turso：创建数据库并拿到凭据
+在本机终端执行（macOS/Linux/Windows PowerShell 均可）：
+```bash
+# 安装 Turso CLI（官方一行命令）
+# macOS/Linux:
+curl -sSfL https://get.tur.so/install.sh | bash
+# Windows PowerShell:
+irm https://get.tur.so/install.ps1 | iex
+
+# 登录（会打开浏览器授权）
+turso auth login
+
+# 创建数据库（名字自取，例如 presales）
+turso db create presales
+
+# 拿数据库 URL（形如 libsql://presales-<你的用户名>.turso.so）
+turso db show presales --url
+
+# 创建访问 token（一长串字符串，只显示一次，复制好）
+turso db tokens create presales
+```
+记下两个值：`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`。
+
+### A2. Vercel：导入仓库并配置环境变量
+1. 打开 https://vercel.com → 右上角 **Add New...** → **Project**。
+2. 在 **Import Git Repository** 列表里选 `presales-academy`（没看到就点 **Adjust GitHub App Permissions** 给 Vercel 授权访问该仓库）。
+3. 框架预设会自动识别为 **Next.js**，**Root Directory** 保持默认（仓库根），**Build Command / Output Directory** 都不用改。
+4. 展开 **Environment Variables**，逐个填入（Production / Preview / Development 三栏都勾，或只勾 Production 也行）：
+   | Name | Value |
+   |---|---|
+   | `NEXT_PUBLIC_SITE_URL` | 先填 Vercel 部署后会分配的 `https://<project>.vercel.app`（第一次可先留空或填占位，部署拿到域名后再回来改） |
+   | `TURSO_DATABASE_URL` | 上一步 `turso db show --url` 的值 |
+   | `TURSO_AUTH_TOKEN` | 上一步 `turso db tokens create` 的值 |
+   | `AI_API_KEY` / `AI_BASE_URL` / `AI_MODEL` | 如有 AI 网关密钥再填，没有可先不填 |
+5. 点 **Deploy**，等构建跑完（首次约 1-2 分钟）。看到 **Congratulations** 即上线成功。
+6. 回到 Vercel 项目 **Settings → Domains** 复制分配的 `*.vercel.app` 域名，再进 **Settings → Environment Variables** 把 `NEXT_PUBLIC_SITE_URL` 改成该域名并 **Redeploy**（让 sitemap / robots 里的 URL 用对正式域名）。
+
+### A3.（强烈建议，可后补）自定义域名
+1. 在域名注册商/Cloudflare DNS 加一条 CNAME：
+   - 主机记录：`pa`（或 `@`）
+   - 目标：`cname.vercel-dns.com`
+2. Vercel 项目 **Settings → Domains → Add**，输入你的域名，按提示完成 DNS 验证（Vercel 自动签 HTTPS 证书）。
+3. 回 **Settings → Environment Variables** 把 `NEXT_PUBLIC_SITE_URL` 更新为 `https://你的域名` → **Redeploy**。
+
+### A4. 上线验收（对应简历故事）
+1. 浏览器打开线上地址 → 首页正常、样式正常、靶心 favicon 可见。
+2. 注册一个账号 → 打卡/做题 → **换浏览器或手机** 登录 → **进度还在**（证明 Turso 同步生效）。
+3. Vercel 项目 **Deployments → 最新一次 → Logs** 无报错；`/sitemap.xml` 返回 XML、`/robots.txt` 返回规则文本。
+4. 收尾：把线上链接放进简历/投递看板。
+
+### A5. Vercel 方案常见问题（FAQ）
+- **注册/登录 500 / `no such table`**：多半是没配 `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN`，或配了但没 Redeploy；表是首次启动自动建的，确认环境变量在 Production 生效。
+- **sitemap 里 URL 是 localhost**：`NEXT_PUBLIC_SITE_URL` 没配正式域名，改完务必 Redeploy。
+- **数据库要重置**：`turso db shell presales` 进去 `DROP TABLE users; DROP TABLE sessions; DROP TABLE sync_blob;` 退出，重启应用即自动重建。
+- **免费额度够吗**：Turso 免费档 500 库 / 9GB / 10 亿次读 + 2500 万次写每月，个人项目远够用；Vercel Hobby 档 100GB 带宽 / 100h serverless 执行，秋招期绰绰有余。
+
+### A6. 面试可以讲的"部署故事"（Vercel 路线）
+> "上线我做了三个关键决策：**① 为什么 Vercel + Turso 而不是自建服务器**——serverless 零运维、Hobby 档免费、Git 推送即自动部署，秋招期一个人能 hold 住；**② 为什么生产数据库换 Turso**——Vercel serverless 无持久文件系统，SQLite 本地文件生产行不通，Turso 是 libSQL 托管，本地开发仍用 file 模式零配置、生产切托管只换两个环境变量；**③ 为什么先 Vercel 后服务器**——先免费上线让简历有链接可放，后期买服务器再切 Docker 方案，代码一套两部署都不丢。"
+
+---
+
+## 方案 B：香港服务器 Docker（后期升级可选）
 
 > 目标：一台香港/海外轻量服务器 + 一个便宜域名 → `https://你的域名` 线上可用，简历可放链接。
 > 全程无需 ICP 备案（服务器在境外即免备案）。预计 1-2 小时（不含买服务器/域名的时间）。

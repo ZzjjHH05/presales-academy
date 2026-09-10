@@ -12,6 +12,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "@next/swc-win32-x64-msvc": "15.5.25",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.10.0",

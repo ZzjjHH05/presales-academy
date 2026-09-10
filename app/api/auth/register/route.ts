@@ -19,11 +19,11 @@ export async function POST(request: Request) {
   if (password.length < 6) {
     return NextResponse.json({ error: "密码至少 6 位" }, { status: 400 });
   }
-  if (findUserByEmail(email)) {
+  if (await findUserByEmail(email)) {
     return NextResponse.json({ error: "该邮箱已注册" }, { status: 409 });
   }
 
-  const user = createUser(email, name, password);
+  const user = await createUser(email, name, password);
   const res = NextResponse.json({ ok: true, user: { name: user.name, email: user.email } });
   await createSession(user.id, res);
   return res;
