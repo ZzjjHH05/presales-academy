@@ -45,6 +45,21 @@ const dbReady: Promise<void> = (async () => {
       updated_at INTEGER NOT NULL,
       PRIMARY KEY (user_id, scope)
     );
+
+    -- Phase 4 · AI 统一网关：缓存表（只增不改）
+    CREATE TABLE IF NOT EXISTS ai_cache (
+      hash TEXT PRIMARY KEY,        -- sha256(AI_MODEL + system + user)
+      result TEXT NOT NULL,         -- AI 成功输出（JSON 字符串）
+      created_at INTEGER NOT NULL
+    );
+
+    -- Phase 4 · AI 统一网关：限流表（只增不改，ip_hash 不存明文 IP）
+    CREATE TABLE IF NOT EXISTS ai_rate (
+      ip_hash TEXT NOT NULL,        -- sha256(ip + 盐)，盐从环境变量 AI_RATE_SALT 取
+      day TEXT NOT NULL,             -- YYYY-MM-DD（按天计数）
+      count INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (ip_hash, day)
+    );
   `);
 })();
 
