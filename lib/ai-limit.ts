@@ -15,7 +15,9 @@ import { get, run } from "./db";
 import { getSessionUser } from "./auth";
 
 const RATE_SALT = process.env.AI_RATE_SALT || "pa-default-salt-dev-only";
-const ANON_LIMIT = 3;
+// 一轮完整模拟面试 = 1 次出题 + 3 次点评 = 4 次 AI 调用；
+// 匿名游客至少能完整走完一轮（产品原则 2：游客优先拿价值）
+const ANON_LIMIT = 5;
 const USER_LIMIT = 20;
 
 interface RateRow {

@@ -20,6 +20,7 @@ import { getAllArticles } from "@/lib/content";
 import { jdInputSchema, jdResultSchema, type JdResult } from "@/lib/jd-schema";
 import { jdFallback } from "@/lib/ai-fallback";
 
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const JD_MAX = 8000;

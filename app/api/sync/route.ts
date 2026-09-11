@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { all, run } from "@/lib/db";
 
-const SCOPES = ["pa-progress-v1", "pa-quiz-v1", "pa-recruit-v1"];
+const SCOPES = ["pa-progress-v1", "pa-quiz-v1", "pa-recruit-v1", "pa-interview-v1"];
 
 export async function GET() {
   const user = await getSessionUser();

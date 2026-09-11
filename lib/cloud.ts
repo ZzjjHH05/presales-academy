@@ -1,4 +1,4 @@
-const KEYS = ["pa-progress-v1", "pa-quiz-v1", "pa-recruit-v1"] as const;
+const KEYS = ["pa-progress-v1", "pa-quiz-v1", "pa-recruit-v1", "pa-interview-v1"] as const;
 
 let authed = false;
 let timer: ReturnType<typeof setTimeout> | null = null;
@@ -36,13 +36,13 @@ function asMap(v: unknown): Record<string, unknown> {
   return v && typeof v === "object" ? (v as Record<string, unknown>) : {};
 }
 
-/** 合并云端与本地：对象型按布尔字段并集，投递数组按 id 去重（本地优先） */
+/** 合并云端与本地：对象型按布尔字段并集，数组型（投递看板 / 面试记录）按 id 去重（本地优先） */
 function mergeBlob(
   key: string,
   cloudRaw: string | null | undefined,
   localRaw: string | null
 ): string | null {
-  if (key === "pa-recruit-v1") {
+  if (key === "pa-recruit-v1" || key === "pa-interview-v1") {
     const cloud = Array.isArray(safeParse(cloudRaw)) ? (safeParse(cloudRaw) as any[]) : [];
     const local = Array.isArray(safeParse(localRaw)) ? (safeParse(localRaw) as any[]) : [];
     const map = new Map<string, unknown>();
