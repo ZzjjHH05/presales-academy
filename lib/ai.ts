@@ -68,8 +68,14 @@ async function callModel(
   user: string,
   retryHint?: string
 ): Promise<string> {
+  // DeepSeek 硬性要求：使用 response_format=json_object 时 prompt 里必须出现 "json" 字样，
+  // 否则返回 400 invalid_request_error。在 system 里兜底补一句，业务端点无需自己记得写。
+  const systemContent = /json/i.test(system)
+    ? system
+    : `${system}\n请严格只输出合法 JSON，不要包含 Markdown 代码块或其他说明文字。`;
+
   const messages: { role: "system" | "user"; content: string }[] = [
-    { role: "system", content: system },
+    { role: "system", content: systemContent },
     {
       role: "user",
       content: retryHint ? `${user}\n\n${retryHint}` : user,
