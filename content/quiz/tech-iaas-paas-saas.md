@@ -3,6 +3,7 @@ category: tech
 question: 用一句话向客户解释 IaaS / PaaS / SaaS 的区别
 hint: 用"谁管什么"来分层，配一个生活化比喻
 minutes: 3
+relatedNotes: [cloud-and-virtualization, tech-breadth-map]
 ---
 
 **参考答案要点**

@@ -3,6 +3,7 @@ category: behavior
 question: 讲一次你协调、说服别人或化解冲突的经历
 hint: 冲突面问题的核心是"立场-利益-方案"三层
 minutes: 3
+relatedNotes: [communicate-as-presales, client-visit-sop]
 ---
 
 **参考答案要点**

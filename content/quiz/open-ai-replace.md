@@ -3,6 +3,7 @@ category: open
 question: 售前会不会被 AI 取代？
 hint: 拆成"写得出 vs 信得过"两个层面回答
 minutes: 3
+relatedNotes: [tech-breadth-map, recruitment-timeline]
 ---
 
 **参考答案要点**

@@ -3,6 +3,7 @@ category: solution
 question: 客户只要最便宜的方案、不认可你的价值，怎么办？
 hint: 不靠降价，靠"把价值量化 + 分层方案 + 管理预期"
 minutes: 5
+relatedNotes: [business-and-pricing, output-toolbox]
 ---
 
 **参考答案要点**

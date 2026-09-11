@@ -138,5 +138,26 @@
     "title": "产出物工具箱",
     "blurb": "方案书 / PPT / 报价怎么写",
     "article": "output-toolbox"
+  },
+  {
+    "id": "tech-5",
+    "domain": "tech",
+    "title": "网络基础",
+    "blurb": "TCP/IP 分层 / HTTP(S) / DNS / 常见端口",
+    "article": "network-fundamentals"
+  },
+  {
+    "id": "tech-6",
+    "domain": "tech",
+    "title": "数据库常识",
+    "blurb": "关系型 vs NoSQL / 索引 / 事务 ACID / 主从",
+    "article": "database-basics"
+  },
+  {
+    "id": "tech-7",
+    "domain": "tech",
+    "title": "安全入门",
+    "blurb": "等保 / 防火墙·WAF·IDS / 加密证书 / 零信任",
+    "article": "security-basics"
   }
 ]

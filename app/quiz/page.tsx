@@ -15,6 +15,7 @@ export default async function QuizPage() {
       hint: x.hint,
       minutes: x.minutes,
       answerHtml: await renderMarkdown(x.answer),
+      relatedNotes: x.relatedNotes,
     }))
   );
 

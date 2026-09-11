@@ -3,6 +3,7 @@ category: behavior
 question: 讲一次你失败的经历，以及你的反思
 hint: 考察复盘能力，重点在"从失败里改变了什么"
 minutes: 3
+relatedNotes: [recruitment-timeline, resume-and-intro]
 ---
 
 **参考答案要点**

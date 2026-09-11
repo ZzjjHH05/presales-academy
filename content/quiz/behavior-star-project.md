@@ -3,6 +3,7 @@ category: behavior
 question: 讲一个你最有成就感的项目
 hint: 用 STAR 结构：情境-任务-行动-结果
 minutes: 3
+relatedNotes: [solution-five-steps, resume-and-intro]
 ---
 
 **参考答案要点（STAR）**

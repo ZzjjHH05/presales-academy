@@ -3,6 +3,7 @@ category: tech
 question: 客户担心上云后数据不安全，你怎么回应？
 hint: 先认同顾虑，再讲"加密-隔离-合规-信任"四层，别硬说服
 minutes: 4
+relatedNotes: [security-basics, cloud-and-virtualization]
 ---
 
 **参考答案要点**

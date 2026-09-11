@@ -3,6 +3,7 @@ category: open
 question: 你怎么理解"售前"这个岗位？
 hint: 用"三个身份 + 一个产出"一句话讲清
 minutes: 3
+relatedNotes: [presales-overview, industry-overview]
 ---
 
 **参考答案要点**

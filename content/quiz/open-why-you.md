@@ -3,6 +3,7 @@ category: open
 question: 为什么我们要录用你？你的差异化是什么？
 hint: 用"匹配度 × 差异化 × 诚意"三段回答
 minutes: 3
+relatedNotes: [resume-and-intro, recruitment-timeline]
 ---
 
 **参考答案要点**

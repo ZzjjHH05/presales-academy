@@ -3,6 +3,7 @@ category: tech
 question: 虚拟机和容器有什么区别？（一句话 + 展开）
 hint: 隔离机制与资源开销是核心差异
 minutes: 3
+relatedNotes: [cloud-and-virtualization, tech-breadth-map]
 ---
 
 **参考答案要点**

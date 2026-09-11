@@ -3,6 +3,7 @@ category: solution
 question: 客户提了个模糊需求（比如"我们要上云"），你怎么澄清？
 hint: 用提问把"目标-现状-约束"问清楚，再判断真伪需求
 minutes: 4
+relatedNotes: [solution-five-steps, client-visit-sop]
 ---
 
 **参考答案要点**

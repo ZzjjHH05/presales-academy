@@ -3,6 +3,7 @@ category: solution
 question: 给一家连锁餐饮做 IT 规划，你怎么开始？
 hint: 先澄清再设计：目标-现状-约束-骨架-取舍
 minutes: 5
+relatedNotes: [solution-five-steps, case-teardown-template]
 ---
 
 **参考答案要点（现场拆需求框架）**
