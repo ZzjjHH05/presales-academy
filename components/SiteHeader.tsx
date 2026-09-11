@@ -6,6 +6,7 @@ const NAV = [
   { href: "/learn", label: "学习内容" },
   { href: "/roadmap", label: "学习路线" },
   { href: "/recruit", label: "投递看板" },
+  { href: "/companies", label: "公司库" },
   { href: "/quiz", label: "题库自测" },
   { href: "/sources", label: "资料库" },
   { href: "/about", label: "关于项目" },

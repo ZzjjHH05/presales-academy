@@ -7,6 +7,7 @@ import {
   type RecruitItem,
   type RecruitStatus,
 } from "@/lib/use-recruit";
+import { COMPANIES } from "@/data/companies";
 
 const emptyForm = { company: "", position: "", city: "", deadline: "", link: "", notes: "" };
 
@@ -21,6 +22,13 @@ export default function RecruitBoard() {
   const { items, add, update, remove } = useRecruit();
   const [form, setForm] = useState(emptyForm);
   const [open, setOpen] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const pickCompany = (name: string, careerUrl: string) => {
+    setForm({ ...emptyForm, company: name, position: "", link: careerUrl });
+    setPickerOpen(false);
+    setOpen(true);
+  };
 
   const submit = () => {
     if (!form.company.trim()) return;
@@ -52,12 +60,42 @@ export default function RecruitBoard() {
         ))}
       </div>
 
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="mb-4 rounded-lg border border-brand-300 bg-white px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
-      >
-        {open ? "收起添加" : "＋ 添加投递"}
-      </button>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="rounded-lg border border-brand-300 bg-white px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
+        >
+          {open ? "收起添加" : "＋ 添加投递"}
+        </button>
+        <button
+          onClick={() => setPickerOpen((v) => !v)}
+          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:border-brand-300 hover:text-brand-700"
+        >
+          {pickerOpen ? "收起公司库" : "从公司库添加"}
+        </button>
+      </div>
+
+      {pickerOpen && (
+        <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4">
+          <p className="mb-3 text-xs text-slate-500">
+            从售前校招公司库选择一家公司，自动预填公司名与官方投递链接，岗位请自行填写：
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {COMPANIES.map((c) => (
+              <button
+                key={c.key}
+                onClick={() => pickCompany(c.name, c.careerUrl)}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-left transition hover:border-brand-300 hover:bg-brand-50"
+              >
+                <span className="block text-sm font-medium text-slate-900">{c.name}</span>
+                <span className="mt-0.5 line-clamp-1 block text-xs text-slate-400">
+                  {c.business}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {open && (
         <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4">
