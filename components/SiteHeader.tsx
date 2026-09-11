@@ -9,6 +9,7 @@ const NAV = [
   { href: "/companies", label: "公司库" },
   { href: "/jd", label: "JD 解析" },
   { href: "/interview", label: "面试模拟" },
+  { href: "/workbench", label: "方案工作台" },
   { href: "/quiz", label: "题库自测" },
   { href: "/sources", label: "资料库" },
   { href: "/about", label: "关于项目" },
