@@ -17,6 +17,12 @@ const nextConfig = {
     "/roadmap": CONTENT_GLOBS,
     "/quiz": CONTENT_GLOBS,
   },
+  // dev 模式禁用 webpack 持久化缓存：本机多次因 .next/cache 损坏导致 dev server 崩溃
+  // （ENOENT 1.pack.gz → unhandledRejection）。牺牲少量冷启动速度，换稳定性。
+  webpack: (config, { dev }) => {
+    if (dev) config.cache = false;
+    return config;
+  },
 };
 
 export default nextConfig;
