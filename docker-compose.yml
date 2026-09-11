@@ -12,6 +12,12 @@ services:
       - path: .env
         required: false # 缺失也能起（本地 file 数据库模式），但建议配置；AI Key（Phase 4 起）从这里进容器
     restart: unless-stopped
+    # 日志上限：防止单机磁盘被日志撑满（可用性保障）
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     expose:
       - "3000"
     volumes:
@@ -20,6 +26,11 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "80:80"      # HTTP（自动跳转 HTTPS）
       - "443:443"    # HTTPS（Caddy 自动签发 Let's Encrypt 证书）

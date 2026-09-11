@@ -67,9 +67,13 @@ export async function createSession(userId: string, res: NextResponse): Promise<
     userId,
     Date.now() + SESSION_MS,
   ]);
+  // 顺带清理过期会话行（无调度器的最小卫生方案：登录/注册时机顺手删）
+  await run("DELETE FROM sessions WHERE expires_at < ?", [Date.now()]);
   res.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
+    // 生产全站 HTTPS（Caddy 自动证书），cookie 仅经安全连接发送；本地 dev 是 http 故按环境区分
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: Math.floor(SESSION_MS / 1000),
   });

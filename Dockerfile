@@ -31,13 +31,16 @@ COPY --from=build /app/next.config.mjs ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/content ./content
+# scripts/：容器内可执行数据库备份（node scripts/db-backup.mjs）
+COPY --from=build /app/scripts ./scripts
 
 # SQLite 数据目录：建空目录并挂 volume（./data:/app/data）
 RUN mkdir -p /app/data && chown -R node:node /app
 USER node
 
 EXPOSE 3000
+# 健康检查走 /api/health（含数据库连通性，且不耗 AI 额度）
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD wget -q -O /dev/null http://127.0.0.1:3000 || exit 1
+  CMD wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1
 
 CMD ["pnpm", "start"]

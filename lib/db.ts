@@ -60,6 +60,15 @@ const dbReady: Promise<void> = (async () => {
       count INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY (ip_hash, day)
     );
+
+    -- 安全加固 · 认证防爆破：登录失败/注册尝试按 IP 按天计数（ip_hash 不存明文 IP）
+    CREATE TABLE IF NOT EXISTS auth_rate (
+      ip_hash TEXT NOT NULL,        -- sha256(ip + AI_RATE_SALT)，与 AI 限流共用盐
+      day TEXT NOT NULL,             -- YYYY-MM-DD（按天计数）
+      kind TEXT NOT NULL,            -- login_fail = 登录失败 | register = 注册尝试
+      count INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (ip_hash, day, kind)
+    );
   `);
 })();
 

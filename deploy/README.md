@@ -177,10 +177,33 @@ docker compose logs -f app # 看应用日志（首次会打印 Next.js ready）
 | 看日志 | `docker compose logs -f app` |
 | 重启 | `docker compose restart app` |
 | 更新代码后重新部署 | `git pull && docker compose up -d --build` |
-| 备份数据 | `docker compose exec app sh -c 'cat /app/data/app.db' > backup-$(date +%F).db`（停服更稳） |
+| **备份数据（推荐）** | `docker compose exec -T app node scripts/db-backup.mjs`——在线一致性快照到 `./data/backups/`，自动保留最近 7 份 |
+| 备份（一次性手动，旧法备选） | `docker compose exec app sh -c 'cat /app/data/app.db' > backup-$(date +%F).db`（需停服，否则 WAL 下可能拷出损坏文件） |
 | 换域名/证书 | 改 Caddyfile → `docker compose restart caddy` |
 
-## 7. 常见问题（FAQ）
+### 6.1 自动备份（建议 5 分钟配好）
+
+在服务器上加一条 cron（每天凌晨 4 点备份，`crontab -e` 添加）：
+
+```bash
+0 4 * * * cd /root/presales-academy && docker compose exec -T app node scripts/db-backup.mjs >> /root/backup.log 2>&1
+```
+
+> 备份文件在宿主机 `presales-academy/data/backups/`，已随 volume 持久化；重要节点（上线前/大改后）手动多跑一次不亏。
+
+## 7. 安全与可用性清单（已内置）
+
+| 手段 | 说明 |
+|---|---|
+| 全站 HTTPS + HSTS | Caddy 自动签发续期证书；HSTS 令浏览器一年内强制 HTTPS |
+| 安全响应头 | CSP / nosniff / DENY iframe / Referrer-Policy / Permissions-Policy（next.config.mjs 统一下发） |
+| 登录防爆破 | 同 IP 每天失败 ≥10 次锁到次日（登录成功即清零）；注册同 IP 每天 ≥5 次拒绝；均落 `auth_rate` 表 |
+| Cookie 加固 | httpOnly + SameSite=Lax + 生产强制 Secure |
+| AI 端点限流 | 匿名 3 次/天、登录 20 次/天（`ai_rate` 表，ip 加盐不存明文 IP） |
+| 容器加固 | 非 root 运行、日志 10MB×3 轮转、HEALTHCHECK 打 `/api/health`（查数据库、不耗 AI 额度） |
+| 拨测监控（建议你做） | 注册 [uptimerobot.com](https://uptimerobot.com) 免费档，HTTP 监控填 `https://zzjjhh05.com/api/health`，挂了发邮件 |
+
+## 8. 常见问题（FAQ）
 
 - **打开是 502/连不上**：八成是 DNS 没生效，或服务器防火墙没放行 80/443。
 - **注册/登录报错**：看 `docker compose logs app`；多半是 `data/` 目录权限问题（确认 volume 挂载）。
@@ -189,7 +212,7 @@ docker compose logs -f app # 看应用日志（首次会打印 Next.js ready）
 
 ---
 
-## 8. 面试可以讲的"部署故事"
+## 9. 面试可以讲的"部署故事"
 
 > "上线我做了三个关键决策：
 > **① 为什么香港服务器**——国内面试官演示要快，且境外服务器免 ICP 备案，省 2-3 周备案周期；

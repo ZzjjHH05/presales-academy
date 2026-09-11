@@ -10,6 +10,40 @@ const CONTENT_GLOBS = [
 
 const nextConfig = {
   reactStrictMode: true,
+  // 安全响应头：全站自包含（无外部 CDN/字体/图片），CSP 可收紧到 'self'。
+  // script-src 保留 'unsafe-inline' 'unsafe-eval'：Next 水合与 dev 热更新需要；
+  // 上 nonce 方案是后续可选项，当前性价比不高。
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob:",
+              "font-src 'self' data:",
+              "connect-src 'self'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+            ].join("; "),
+          },
+        ],
+      },
+    ];
+  },
   outputFileTracingIncludes: {
     "/": CONTENT_GLOBS,
     "/learn": CONTENT_GLOBS,

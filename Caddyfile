@@ -3,6 +3,8 @@
 # 前置：DNSPod 解析中加两条 A 记录（@ 和 www → 服务器公网 IP）
 # HTTPS：Caddy 自动申请并续期 Let's Encrypt 证书，无需手动配置
 zzjjhh05.com {
+	# HSTS：告诉浏览器此后一年只用 HTTPS 访问本站（含子域）。证书由 Caddy 自动签发续期。
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
 	reverse_proxy app:3000
 }
 
