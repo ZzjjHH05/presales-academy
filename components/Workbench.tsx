@@ -102,25 +102,28 @@ export default function Workbench({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded]);
 
-  // 800ms 防抖自动保存（仅 write 阶段 / scenarioText / clarifyNotes 变更时）
+  // 800ms 防抖自动保存。用 ref 镜像最新 state，避免 setTimeout 闭包读到陈旧值。
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  function scheduleSave(patch: Partial<WorkbenchDraft>) {
+  const latestRef = useRef({ pickedLabel, scenarioText, clarifyNotes, sections, contents, reviews });
+  latestRef.current = { pickedLabel, scenarioText, clarifyNotes, sections, contents, reviews };
+  function scheduleSave(patch: Partial<WorkbenchDraft> = {}) {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
+      const s = latestRef.current;
       const baseSections =
-        sections.length === 5
-          ? sections.map((s, i) => ({
-              key: s.key,
-              heading: s.heading,
-              prompts: s.prompts,
-              content: i < contents.length ? contents[i] : "",
-              review: reviews[i],
+        s.sections.length === 5
+          ? s.sections.map((sec, i) => ({
+              key: sec.key,
+              heading: sec.heading,
+              prompts: sec.prompts,
+              content: i < s.contents.length ? s.contents[i] : "",
+              review: s.reviews[i],
             }))
           : [];
       save({
-        scenarioLabel: pickedLabel || "自定义",
-        scenarioText,
-        clarifyNotes,
+        scenarioLabel: s.pickedLabel || "自定义",
+        scenarioText: s.scenarioText,
+        clarifyNotes: s.clarifyNotes,
         sections: baseSections,
         ...patch,
       });
@@ -231,6 +234,9 @@ export default function Workbench({
       };
       setReviews(next);
       setStatus({ degraded: r.degraded, cached: r.cached, remaining: r.remaining });
+      // 同步 ref 后保存，避免 setState 异步导致点评漏写
+      latestRef.current = { ...latestRef.current, reviews: next };
+      scheduleSave();
     } catch {
       setError("网络异常，请重试");
     } finally {
@@ -391,10 +397,12 @@ export default function Workbench({
             setPickedLabel(label);
             setScenarioText(text);
             setError(null);
+            scheduleSave();
           }}
           onEditText={(v) => {
             setScenarioText(v);
             setPickedLabel("自定义");
+            scheduleSave();
           }}
           questions={questions}
           clarifying={clarifying}
