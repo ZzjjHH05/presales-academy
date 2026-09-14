@@ -35,8 +35,10 @@ COPY --from=build /app/next.config.mjs ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/content ./content
-# scripts/：容器内可执行数据库备份（node scripts/db-backup.mjs）
+# scripts/：容器内可执行数据库备份（node scripts/db-backup.mjs）与演示缓存（tsx scripts/seed-demo-cache.ts）
 COPY --from=build /app/scripts ./scripts
+# lib/：seed-demo-cache 需要 import ../lib/jd-core 等纯库（type-only 的 @/ 导入会被 tsx 剥离，无需 data/）
+COPY --from=build /app/lib ./lib
 
 # SQLite 数据目录：建空目录并挂 volume（./data:/app/data）
 RUN mkdir -p /app/data && chown -R node:node /app
