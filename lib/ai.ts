@@ -31,7 +31,7 @@ interface CacheRow {
 }
 
 /** 内容哈希：sha256(AI_MODEL + system + user)。纳入 model 保证换模型不串结果。 */
-function contentHash(system: string, user: string): string {
+export function contentHash(system: string, user: string): string {
   return createHash("sha256")
     .update(AI_MODEL + system + user)
     .digest("hex");
