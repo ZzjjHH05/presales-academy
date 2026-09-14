@@ -4,7 +4,9 @@
 FROM node:24-alpine AS deps
 RUN npm install -g pnpm@11.25.0
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+# pnpm-workspace.yaml 必须一起 COPY：pnpm 11 的 allowBuilds（esbuild 构建脚本审批）配置在这里，
+# 缺了它 pnpm install 会以 ERR_PNPM_IGNORED_BUILDS 失败（本地有该文件所以不报错）
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 FROM node:24-alpine AS build
@@ -27,6 +29,8 @@ WORKDIR /app
 # 运行期需要的文件
 COPY --from=build /app/package.json ./
 COPY --from=build /app/pnpm-lock.yaml ./
+# 与 deps 阶段同理：pnpm start 若触发依赖状态校验，审批配置需在场
+COPY --from=build /app/pnpm-workspace.yaml ./
 COPY --from=build /app/next.config.mjs ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
